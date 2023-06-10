@@ -7,14 +7,5 @@ import (
 )
 
 func main() {
-	// db := CreateDBClient()
-
-	s := &Server{
-		// db: db,
-		router: routes.Router(),
-	}
-
-
-
-	http.ListenAndServe(":3000", s.router)
+	http.ListenAndServe(":3000", routes.Router())
 }

@@ -1,11 +1,48 @@
 package users
 
-type UsersService struct {}
+import (
+	"context"
+	"time"
 
-func (us *UsersService) GetByEmail(email string) {
-	
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
+type UsersService struct {
+	Col *mongo.Collection
 }
 
-func (us *UsersService) GetById(id string) {
+func (us *UsersService) FindByEmail(user *User, email string, filter interface{}) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	return us.Col.FindOne(ctx, filter).Decode(user)
+}
+
+func (us *UsersService) Create(data *SignupData) (*mongo.InsertOneResult, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	return us.Col.InsertOne(ctx, data)
+}
+
+func (us *UsersService) List(filter interface{}) ([]*User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+	cur, err := us.Col.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*User
+	for cur.Next(ctx) {
+		user := &User{}
+		er := cur.Decode(user)
+		if er != nil {
+			return nil, er
+		}
+		result = append(result, user)
+	}
+	return result, nil
+}
+
+func (us *UsersService) FindById(id string) {
 
 }
