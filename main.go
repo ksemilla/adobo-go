@@ -3,13 +3,18 @@ package main
 import (
 	"net/http"
 
-	"github.com/go-chi/chi/v5"
+	"github.com/ksemilla/adobo-go/pkg/routes"
 )
 
 func main() {
-	r := chi.NewRouter()
-	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello world"))
-	})
-	http.ListenAndServe(":3000", r)
+	// db := CreateDBClient()
+
+	s := &Server{
+		// db: db,
+		router: routes.Router(),
+	}
+
+
+
+	http.ListenAndServe(":3000", s.router)
 }
