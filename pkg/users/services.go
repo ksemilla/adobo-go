@@ -2,8 +2,10 @@ package users
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -26,18 +28,20 @@ func (us *UsersService) Create(data *SignupData) (*mongo.InsertOneResult, error)
 func (us *UsersService) List(filter interface{}) ([]*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	cur, err := us.Col.Find(ctx, filter)
+	cur, err := us.Col.Find(ctx, bson.D{})
 	if err != nil {
 		return nil, err
 	}
 
 	var result []*User
 	for cur.Next(ctx) {
-		user := &User{}
-		er := cur.Decode(user)
-		if er != nil {
-			return nil, er
+		var user *User
+		
+		err := cur.Decode(&user)
+		if err != nil {
+			return nil, err
 		}
+		fmt.Println("ahgehehe 1", user)
 		result = append(result, user)
 	}
 	return result, nil

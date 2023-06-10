@@ -8,10 +8,12 @@ type SignupData struct {
 }
 
 type User struct {
-	email string
+	Id string `json:"id" bson:"_id"`
+	Email string `json:"email"`
 }
 
 type UserServiceInterface interface {
 	FindByEmail(*User, string, interface{}) error
 	Create(*SignupData) (*mongo.InsertOneResult, error)
+	List(interface{}) ([]*User, error)
 }
