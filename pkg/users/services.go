@@ -2,7 +2,6 @@ package users
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -33,7 +32,7 @@ func (us *UsersService) List(filter interface{}) ([]*User, error) {
 		return nil, err
 	}
 
-	var result []*User
+	result := []*User{}
 	for cur.Next(ctx) {
 		var user *User
 		
@@ -41,7 +40,6 @@ func (us *UsersService) List(filter interface{}) ([]*User, error) {
 		if err != nil {
 			return nil, err
 		}
-		fmt.Println("ahgehehe 1", user)
 		result = append(result, user)
 	}
 	return result, nil
