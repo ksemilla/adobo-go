@@ -20,6 +20,10 @@ func (mus *MockUsersService) Create(*users.SignupData) (*mongo.InsertOneResult, 
 	return &mongo.InsertOneResult{}, nil
 }
 
+func (mus *MockUsersService) List(filter interface{}) ([]*users.User, error) {
+	return nil, nil
+}
+
 func TestSignupSuccess(t *testing.T) {
 	
 	body := []byte(`{"email": "test@test.com", "password": "test"}`)
@@ -30,7 +34,7 @@ func TestSignupSuccess(t *testing.T) {
 		UsersService: &MockUsersService{},
 	}
 	handler.SignUp(res, req)
-	if res.Code != http.StatusOK {
+	if res.Code != http.StatusCreated {
 		t.Errorf("expected success request")
 	}
 }
