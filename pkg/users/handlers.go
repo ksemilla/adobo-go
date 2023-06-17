@@ -10,7 +10,7 @@ import (
 )
 
 type UserHandler struct {
-	UsersService *UsersService
+	UsersService UserServiceInterface
 }
 
 func (uh *UserHandler) GetOne(w http.ResponseWriter, r *http.Request) {

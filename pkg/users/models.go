@@ -21,7 +21,8 @@ type User struct {
 type MongoUser interface { User | RawUser }
 
 type UserServiceInterface interface {
+	GetOne(*RawUser, interface{}) error
 	FindByEmail(*RawUser, string) error
 	Create(*SignupData) (*mongo.InsertOneResult, error)
-	List(interface{}) ([]*User, error)
+	GetList(*[]*RawUser,interface{}) error
 }

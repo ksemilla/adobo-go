@@ -1,4 +1,4 @@
-package auth
+package auth_test
 
 import (
 	"bytes"
@@ -7,6 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/ksemilla/adobo-go/pkg/auth"
 	"github.com/ksemilla/adobo-go/pkg/users"
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -24,13 +25,21 @@ func (mus *MockUsersService) List(filter interface{}) ([]*users.User, error) {
 	return nil, nil
 }
 
+func (mus *MockUsersService) GetList(users *[]*users.RawUser ,filter interface{}) error {
+	return nil
+}
+
+func (mus *MockUsersService) GetOne(users *users.RawUser, filter interface{}) error {
+	return nil
+}
+
 func TestSignupSuccess(t *testing.T) {
 	
 	body := []byte(`{"email": "test@test.com", "password": "test"}`)
 	req := httptest.NewRequest(http.MethodPost, "/api/auth/signup", bytes.NewReader(body))
 	res := httptest.NewRecorder()
 
-	handler := &AuthHandler{
+	handler := &auth.AuthHandler{
 		UsersService: &MockUsersService{},
 	}
 	handler.SignUp(res, req)
@@ -43,7 +52,7 @@ func TestSignupFail_1(t *testing.T) {
 	body := []byte(`{"email": "test", "password": "test"}`)
 	req := httptest.NewRequest(http.MethodPost, "/api/auth/signup", bytes.NewReader(body))
 	res := httptest.NewRecorder()
-	handler := &AuthHandler{UsersService: &MockUsersService{}}
+	handler := &auth.AuthHandler{UsersService: &MockUsersService{}}
 	handler.SignUp(res, req)
 	if res.Code != http.StatusBadRequest {
 		t.Errorf("expected fail request for inavlid email")
@@ -54,7 +63,7 @@ func TestSignupFail_2(t *testing.T) {
 	body := []byte(`{"password": "test"}`)
 	req := httptest.NewRequest(http.MethodPost, "/api/auth/signup", bytes.NewReader(body))
 	res := httptest.NewRecorder()
-	handler := &AuthHandler{UsersService: &MockUsersService{}}
+	handler := &auth.AuthHandler{UsersService: &MockUsersService{}}
 	handler.SignUp(res, req)
 	if res.Code != http.StatusBadRequest {
 		t.Errorf("expected fail request for no email field")
@@ -65,7 +74,7 @@ func TestSignupFail_3(t *testing.T) {
 	body := []byte(`{"email": "test@test.com"}`)
 	req := httptest.NewRequest(http.MethodPost, "/api/auth/signup", bytes.NewReader(body))
 	res := httptest.NewRecorder()
-	handler := &AuthHandler{UsersService: &MockUsersService{}}
+	handler := &auth.AuthHandler{UsersService: &MockUsersService{}}
 	handler.SignUp(res, req)
 	if res.Code != http.StatusBadRequest {
 		t.Errorf("expected fail request for no password field")
@@ -82,7 +91,7 @@ func TestSignupFail_4(t *testing.T) {
 	body := []byte(`{"email": "test@test.com", password: "test"}`)
 	req := httptest.NewRequest(http.MethodPost, "/api/auth/signup", bytes.NewReader(body))
 	res := httptest.NewRecorder()
-	handler := &AuthHandler{UsersService: &MockUsersService{}}
+	handler := &auth.AuthHandler{UsersService: &MockUsersService{}}
 	handler.SignUp(res, req)
 	if res.Code != http.StatusBadRequest {
 		t.Errorf("expected fail request for email in use already")
