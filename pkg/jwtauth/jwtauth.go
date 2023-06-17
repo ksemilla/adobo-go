@@ -3,6 +3,7 @@ package jwtauth
 import (
 	"context"
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -16,6 +17,21 @@ type JWTAuth struct {
 	signKey   interface{} // private-key
 	verifyKey interface{} // public-key, only used by RSA and ECDSA algorithms
 	verifier  jwt.ParseOption
+}
+
+var tokenAuth *JWTAuth
+
+func init() {
+	tokenAuth = New("HS256", []byte("secret"), nil) // replace with secret key
+  
+	// For debugging/example purposes, we generate and print
+	// a sample jwt token with claims `user_id:123` here:
+	_, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"user_id": 123})
+	fmt.Printf("DEBUG: a sample jwt is %s\n\n", tokenString)
+  }
+
+func GetTokenAuth() *JWTAuth {
+	return tokenAuth
 }
 
 var (

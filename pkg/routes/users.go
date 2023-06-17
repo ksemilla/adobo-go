@@ -13,4 +13,5 @@ func UserRoutes(r chi.Router) {
 	}
 
 	r.Get("/", usersResource.List)
+	r.Get("/{id}", usersResource.GetOne)
 }

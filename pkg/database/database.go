@@ -49,6 +49,10 @@ func GetDB() *mongo.Database {
 	return client.Database(os.Getenv("DATABASE_NAME"))
 }
 
+func GetCollection(name  string) *mongo.Collection {
+	return GetDB().Collection(name)
+}
+
 func GetUserCol() *mongo.Collection {
 	return GetDB().Collection("users")
 }

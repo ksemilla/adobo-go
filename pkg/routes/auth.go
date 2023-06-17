@@ -11,5 +11,6 @@ func AuthRoutes(r chi.Router) {
 	usersService := &users.UsersService{Col: database.GetUserCol()}
 	authResource := &auth.AuthHandler{UsersService: usersService}
 
+	r.Post("/", authResource.GetToken)
 	r.Post("/signup", authResource.SignUp)
 }

@@ -12,7 +12,7 @@ import (
 )
 type MockUsersService struct {}
 
-func (mus *MockUsersService) FindByEmail(user *users.User, email string, filter interface{}) error {
+func (mus *MockUsersService) FindByEmail(user *users.RawUser, email string) error {
 	return errors.New("Email already in use")
 }
 
@@ -74,7 +74,7 @@ func TestSignupFail_3(t *testing.T) {
 
 type MockUsersService2 struct {}
 
-func (mus *MockUsersService2) FindByEmail(user *users.User, email string, filter interface{}) error {
+func (mus *MockUsersService2) FindByEmail(user *users.User, email string) error {
 	return nil
 }
 
