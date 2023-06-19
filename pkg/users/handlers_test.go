@@ -32,9 +32,9 @@ func (mus *MockUsersService) GetOne(users *users.RawUser, filter interface{}) er
 	return nil
 }
 
-func TestGetOneFail(t *testing.T) {
+func TestGetOneUserFail(t *testing.T) {
 	
-	req := httptest.NewRequest(http.MethodGet, "/api/users/", nil)
+	req := httptest.NewRequest(http.MethodGet, "/api/users/1", nil)
 	res := httptest.NewRecorder()
 
 	handler := &users.UserHandler{
